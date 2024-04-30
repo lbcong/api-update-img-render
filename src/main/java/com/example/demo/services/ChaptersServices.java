@@ -1,0 +1,35 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.example.demo.services;
+
+import com.example.demo.entity.Chapters;
+import com.example.demo.entity.Comics;
+import com.example.demo.repository.ChaptersRepository;
+import com.example.demo.repository.ComicsRepository;
+import com.example.demo.utils.Utils;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional
+@Service
+public class ChaptersServices {
+
+    @Autowired
+    ChaptersRepository chaptersRepository;
+
+    public Optional<Chapters> findById(long id) {
+        return chaptersRepository.findById(id);
+    }
+
+    @Transactional
+    public Chapters update(Chapters chapter, com.example.demo.Pojo.Chapter requestBody) {
+        if (!Utils.isBlank(requestBody.getLink_small_icon())) {
+            chapter.setLinkSmallIcon(requestBody.getLink_small_icon());
+        }
+        return chaptersRepository.save(chapter);
+    }
+}
