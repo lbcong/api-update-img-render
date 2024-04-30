@@ -27,6 +27,9 @@ public class Comics implements Serializable {
     @Basic(optional = false)
     private Long id;
 
+    @Column(name = "link_bg")
+    private String linkBg;
+
     @Column(name = "link_avatar")
     private String linkAvatar;
 
@@ -51,6 +54,14 @@ public class Comics implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getLinkBg() {
+        return linkBg;
+    }
+
+    public void setLinkBg(String linkBg) {
+        this.linkBg = linkBg;
     }
 
     public String getLinkAvatar() {
@@ -101,9 +112,4 @@ public class Comics implements Serializable {
         this.linkComicSmallName = linkComicSmallName;
     }
 
-
-
-
-    
-    
 }

@@ -9,6 +9,7 @@ import com.example.demo.entity.ContentImages;
 import com.example.demo.repository.ComicsRepository;
 import com.example.demo.repository.ContentImagesRepository;
 import com.example.demo.utils.Utils;
+import java.io.IOException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,20 @@ public class ContentImagesServices {
     }
 
     @Transactional
-    public ContentImages update(ContentImages contentImage, com.example.demo.Pojo.ContentImage requestBody) {
-        if (!Utils.isBlank(requestBody.getLink_img())) {
-            contentImage.setLinkImg(requestBody.getLink_img());
+    public ContentImages update(com.example.demo.Pojo.ContentImage requestBody) throws IOException {
+        Optional<ContentImages> optional = findById(Long.parseLong(requestBody.getId()));
+        if (optional != null) {
+            ContentImages contentImage = optional.orElse(null);
+
+            String linkTmp = "";
+            if (!Utils.isBlank(requestBody.getLink_img())) {
+                linkTmp = GetRealImgLink.getRealLink(requestBody.getLink_img());
+                if (!Utils.isBlank(linkTmp)) {
+                    contentImage.setLinkImg(linkTmp);
+                }
+            }
+            return contentImagesRepository.save(contentImage);
         }
-        return contentImagesRepository.save(contentImage);
+        return null;
     }
 }

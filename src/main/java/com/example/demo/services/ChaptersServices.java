@@ -9,6 +9,7 @@ import com.example.demo.entity.Comics;
 import com.example.demo.repository.ChaptersRepository;
 import com.example.demo.repository.ComicsRepository;
 import com.example.demo.utils.Utils;
+import java.io.IOException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,20 @@ public class ChaptersServices {
     }
 
     @Transactional
-    public Chapters update(Chapters chapter, com.example.demo.Pojo.Chapter requestBody) {
-        if (!Utils.isBlank(requestBody.getLink_small_icon())) {
-            chapter.setLinkSmallIcon(requestBody.getLink_small_icon());
+    public Chapters update(com.example.demo.Pojo.Chapter requestBody) throws IOException {
+        Optional<Chapters> optional = findById(Long.parseLong(requestBody.getId()));
+        if (optional != null) {
+            Chapters chapter = optional.orElse(null);
+
+            String linkTmp = "";
+            if (!Utils.isBlank(requestBody.getLink_small_icon())) {
+                linkTmp = GetRealImgLink.getRealLink(requestBody.getLink_small_icon());
+                if (!Utils.isBlank(linkTmp)) {
+                    chapter.setLinkSmallIcon(linkTmp);
+                }
+            }
+            return chaptersRepository.save(chapter);
         }
-        return chaptersRepository.save(chapter);
+        return null;
     }
 }

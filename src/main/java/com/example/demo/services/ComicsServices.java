@@ -7,6 +7,7 @@ package com.example.demo.services;
 import com.example.demo.entity.Comics;
 import com.example.demo.repository.ComicsRepository;
 import com.example.demo.utils.Utils;
+import java.io.IOException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,25 +25,48 @@ public class ComicsServices {
     }
 
     @Transactional
-    public Comics update(Comics comic, com.example.demo.Pojo.Comic requestBody) {
-        if (!Utils.isBlank(requestBody.getLink_avatar())) {
-            comic.setLinkAvatar(requestBody.getLink_avatar());
+    public Comics update(com.example.demo.Pojo.Comic requestBody) throws IOException {
+        Optional<Comics> optional = findById(Long.parseLong(requestBody.getId()));
+        if (optional != null) {
+            Comics comic = optional.orElse(null);
+            if (comic != null) {
+                String linkTmp = "";
+                if (!Utils.isBlank(requestBody.getLink_bg())) {
+                    linkTmp = GetRealImgLink.getRealLink(requestBody.getLink_bg());
+                    if (!Utils.isBlank(linkTmp)) {
+                        comic.setLinkBg(linkTmp);
+                    }
+                }
+                linkTmp = "";
+                if (!Utils.isBlank(requestBody.getLink_avatar())) {
+                    linkTmp = GetRealImgLink.getRealLink(requestBody.getLink_avatar());
+                    if (!Utils.isBlank(linkTmp)) {
+                        comic.setLinkAvatar(linkTmp);
+                    }
+                }
+                linkTmp = "";
+                if (!Utils.isBlank(requestBody.getLink_banner())) {
+                    linkTmp = GetRealImgLink.getRealLink(requestBody.getLink_banner());
+                    if (!Utils.isBlank(linkTmp)) {
+                        comic.setLinkBanner(linkTmp);
+                    }
+                }
+                if (!Utils.isBlank(requestBody.getLink_comic_name())) {
+                    linkTmp = GetRealImgLink.getRealLink(requestBody.getLink_comic_name());
+                    if (!Utils.isBlank(linkTmp)) {
+                        comic.setLinkComicName(linkTmp);
+                    }
+                }
+                if (!Utils.isBlank(requestBody.getLink_comic_small_name())) {
+                    linkTmp = GetRealImgLink.getRealLink(requestBody.getLink_comic_small_name());
+                    if (!Utils.isBlank(linkTmp)) {
+                        comic.setLinkComicSmallName(linkTmp);
+                    }
+                }
+
+                return comicsRepository.save(comic);
+            }
         }
-        if (!Utils.isBlank(requestBody.getLink_banner())) {
-            comic.setLinkBanner(requestBody.getLink_banner());
-        }
-        if (!Utils.isBlank(requestBody.getLink_comic_name())) {
-            comic.setLinkComicName(requestBody.getLink_comic_name());
-        }
-        if (!Utils.isBlank(requestBody.getLink_comic_small_name())) {
-            comic.setLinkComicSmallName(requestBody.getLink_comic_small_name());
-        }
-        if (!Utils.isBlank(requestBody.getLink_video_banner())) {
-            comic.setLinkVideoBanner(requestBody.getLink_video_banner());
-        }
-        if (!Utils.isBlank(requestBody.getLink_video_banner_2())) {
-            comic.setLinkVideoBanner2(requestBody.getLink_video_banner_2());
-        }
-        return comicsRepository.save(comic);
+        return null;
     }
 }

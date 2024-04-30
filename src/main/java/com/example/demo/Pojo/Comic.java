@@ -11,7 +11,10 @@ import org.springframework.lang.Nullable;
  * @author Alex
  */
 public class Comic {
+
     private String id;
+    @Nullable
+    private String link_bg;
     @Nullable
     private String link_avatar;
     @Nullable
@@ -31,6 +34,14 @@ public class Comic {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getLink_bg() {
+        return link_bg;
+    }
+
+    public void setLink_bg(String link_bg) {
+        this.link_bg = link_bg;
     }
 
     public String getLink_avatar() {
@@ -80,6 +91,5 @@ public class Comic {
     public void setLink_comic_small_name(String link_comic_small_name) {
         this.link_comic_small_name = link_comic_small_name;
     }
-    
-    
+
 }

@@ -7,11 +7,15 @@ import com.example.demo.repository.ComicsRepository;
 import com.example.demo.services.ChaptersServices;
 import com.example.demo.services.ComicsServices;
 import com.example.demo.services.ContentImagesServices;
+import com.example.demo.services.GetRealImgLink;
 import com.example.demo.utils.Utils;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -37,9 +41,14 @@ public class DemoApplication {
     ContentImagesServices contentImagesServices;
 
     public static void main(String[] args) {
+        try {
+            GetRealImgLink.getRealLink("");
+        } catch (IOException ex) {
+            Logger.getLogger(DemoApplication.class.getName()).log(Level.SEVERE, null, ex);
+        }
         SpringApplication.run(DemoApplication.class, args);
     }
-    
+
     @PostMapping("githook")
     @ResponseBody
     public String githook() throws Exception {
@@ -60,10 +69,10 @@ public class DemoApplication {
         new Thread() {
             public void run() {
                 if (!Utils.isBlank(requestBody.getId())) {
-                    Optional<Comics> optional = comicsServices.findById(Long.parseLong(requestBody.getId()));
-                    if (optional != null) {
-                        Comics c = optional.orElse(null);
-                        comicsServices.update(c, requestBody);
+                    try {
+                        comicsServices.update(requestBody);
+                    } catch (IOException ex) {
+                        Logger.getLogger(DemoApplication.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
@@ -78,10 +87,10 @@ public class DemoApplication {
         new Thread() {
             public void run() {
                 if (!Utils.isBlank(requestBody.getId())) {
-                    Optional<Chapters> optional = chaptersServices.findById(Long.parseLong(requestBody.getId()));
-                    if (optional != null) {
-                        Chapters c = optional.orElse(null);
-                        chaptersServices.update(c, requestBody);
+                    try {
+                        chaptersServices.update(requestBody);
+                    } catch (IOException ex) {
+                        Logger.getLogger(DemoApplication.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
@@ -96,10 +105,10 @@ public class DemoApplication {
         new Thread() {
             public void run() {
                 if (!Utils.isBlank(requestBody.getId())) {
-                    Optional<ContentImages> optional = contentImagesServices.findById(Long.parseLong(requestBody.getId()));
-                    if (optional != null) {
-                        ContentImages c = optional.orElse(null);
-                        contentImagesServices.update(c, requestBody);
+                    try {
+                        contentImagesServices.update(requestBody);
+                    } catch (IOException ex) {
+                        Logger.getLogger(DemoApplication.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
