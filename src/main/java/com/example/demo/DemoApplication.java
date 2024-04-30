@@ -39,6 +39,12 @@ public class DemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
+    
+    @PostMapping("githook")
+    @ResponseBody
+    public String githook() throws Exception {
+        return "ok";
+    }
 
     @PostMapping("save-comic")
     @ResponseBody
