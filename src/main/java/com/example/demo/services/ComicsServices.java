@@ -19,6 +19,10 @@ public class ComicsServices {
 
     @Autowired
     ComicsRepository comicsRepository;
+    
+    public Iterable<Comics> findAll(){
+        return comicsRepository.findAll();
+    }
 
     public Optional<Comics> findById(long id) {
         return comicsRepository.findById(id);

@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import com.example.demo.Pojo.Chapter;
+import com.example.demo.Pojo.Comic;
 import com.example.demo.entity.Chapters;
 import com.example.demo.entity.Comics;
 import com.example.demo.entity.ContentImages;
@@ -41,11 +43,6 @@ public class DemoApplication {
     ContentImagesServices contentImagesServices;
 
     public static void main(String[] args) {
-        try {
-            GetRealImgLink.getRealLink("");
-        } catch (IOException ex) {
-            Logger.getLogger(DemoApplication.class.getName()).log(Level.SEVERE, null, ex);
-        }
         SpringApplication.run(DemoApplication.class, args);
     }
 
@@ -55,17 +52,81 @@ public class DemoApplication {
         return "ok";
     }
 
+    @GetMapping("updateComic")
+    @ResponseBody
+    public String updateComic() throws Exception {
+        Iterable<Comics> comics = comicsServices.findAll();
+
+        Iterator<Comics> iterator = comics.iterator();
+//         Duyệt qua các phần tử và hiển thị chúng
+        while (iterator.hasNext()) {
+            Comics element = iterator.next();
+            new Thread() {
+                public void run() {
+                    try {
+                        com.example.demo.Pojo.Comic requestBody = new Comic();
+                        requestBody.setId(Long.toString(element.getId()));
+                        requestBody.setLink_avatar(GetRealImgLink.getIdGG(element.getLinkAvatar()));
+                        requestBody.setLink_banner(GetRealImgLink.getIdGG(element.getLinkBanner()));
+                        requestBody.setLink_bg(GetRealImgLink.getIdGG(element.getLinkBg()));
+                        requestBody.setLink_comic_name(GetRealImgLink.getIdGG(element.getLinkComicName()));
+                        requestBody.setLink_comic_small_name(GetRealImgLink.getIdGG(element.getLinkComicSmallName()));
+                        comicsServices.update(requestBody);
+                    } catch (IOException ex) {
+                        Logger.getLogger(DemoApplication.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }.start();
+        }
+        return "ok";
+    }
+
+    @GetMapping("updateChapter")
+    @ResponseBody
+    public String updateChapter() throws Exception {
+        Iterable<Chapters> comics = chaptersServices.findAll();
+
+        Iterator<Chapters> iterator = comics.iterator();
+//         Duyệt qua các phần tử và hiển thị chúng
+        while (iterator.hasNext()) {
+            Chapters element = iterator.next();
+            new Thread() {
+                public void run() {
+                    try {
+                        com.example.demo.Pojo.Chapter requestBody = new Chapter();
+                        requestBody.setId(Long.toString(element.getId()));
+                        requestBody.setLink_small_icon(GetRealImgLink.getIdGG(element.getLinkSmallIcon()));
+                        chaptersServices.update(requestBody);
+                    } catch (IOException ex) {
+                        Logger.getLogger(DemoApplication.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }.start();
+        }
+        return "ok";
+    }
+
+    @GetMapping("updateContentImage")
+    @ResponseBody
+    public String updateContentImage() throws Exception {
+        Iterable<ContentImages> comics = contentImagesServices.findAll();
+
+        Iterator<ContentImages> iterator = comics.iterator();
+//         Duyệt qua các phần tử và hiển thị chúng
+        while (iterator.hasNext()) {
+            ContentImages element = iterator.next();
+            com.example.demo.Pojo.ContentImage requestBody = new com.example.demo.Pojo.ContentImage();
+            requestBody.setId(Long.toString(element.getId()));
+            requestBody.setLink_img(GetRealImgLink.getIdGG(element.getLinkImg()));
+            contentImagesServices.update(requestBody);
+        }
+        return "ok";
+    }
+
     @PostMapping("save-comic")
     @ResponseBody
     public String saveComic(@RequestBody com.example.demo.Pojo.Comic requestBody) throws Exception {
-//        Iterable<Comics> comics = comicsRepository.findAll();
 
-//        Iterator<Comics> iterator = comics.iterator();
-        // Duyệt qua các phần tử và hiển thị chúng
-//        while (iterator.hasNext()) {
-//            Comics element = iterator.next();
-//            System.out.println(element);
-//        }
         new Thread() {
             public void run() {
                 if (!Utils.isBlank(requestBody.getId())) {

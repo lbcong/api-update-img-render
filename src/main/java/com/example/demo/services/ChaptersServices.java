@@ -26,6 +26,9 @@ public class ChaptersServices {
         return chaptersRepository.findById(id);
     }
 
+      public Iterable<Chapters> findAll(){
+        return chaptersRepository.findAll();
+    }
     @Transactional
     public Chapters update(com.example.demo.Pojo.Chapter requestBody) throws IOException {
         Optional<Chapters> optional = findById(Long.parseLong(requestBody.getId()));

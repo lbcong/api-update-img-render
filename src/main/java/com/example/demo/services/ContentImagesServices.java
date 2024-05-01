@@ -26,6 +26,10 @@ public class ContentImagesServices {
         return contentImagesRepository.findById(id);
     }
 
+    public Iterable<ContentImages> findAll() {
+        return contentImagesRepository.findAll();
+    }
+
     @Transactional
     public ContentImages update(com.example.demo.Pojo.ContentImage requestBody) throws IOException {
         Optional<ContentImages> optional = findById(Long.parseLong(requestBody.getId()));

@@ -24,6 +24,19 @@ import org.apache.http.util.ByteArrayBuffer;
  */
 public class GetRealImgLink {
 
+    public static String getIdGG(String link) {
+
+        Pattern pattern = null;
+        Matcher matcher = null;
+        pattern = Pattern.compile("googleusercontent\\.com\\/d\\/(.*?)=w1000");
+        matcher = pattern.matcher(link);
+        String queryResult = "";
+        if (matcher.find()) {
+            queryResult = matcher.group(1);
+        }
+        return queryResult;
+    }
+
     public static String getRealLink(String id) throws IOException {
 
         Socket socket = null;
@@ -42,7 +55,7 @@ public class GetRealImgLink {
             sslSocket.startHandshake();
             wr = new BufferedWriter(new OutputStreamWriter(sslSocket.getOutputStream(), "UTF8"));
             String str
-                    = "GET /file/d/"+id+"/view?usp=drive_link HTTP/1.0\r\n"
+                    = "GET /file/d/" + id + "/view?usp=drive_link HTTP/1.0\r\n"
                     + "Host: drive.google.com\r\n"
                     + "Connection: keep-alive\r\n"
                     + "Cache-Control: max-age=0\r\n"
@@ -67,10 +80,10 @@ public class GetRealImgLink {
             Matcher matcher = null;
             pattern = Pattern.compile("drive-viewer\\/(.*?)\\\\");
             matcher = pattern.matcher(new String(baf.toByteArray()));
-            
+
             if (matcher.find()) {
                 queryResult = matcher.group(1);
-                queryResult = "https://lh3.googleusercontent.com/drive-viewer/"+queryResult+"=w8000-rw-v1";
+                queryResult = "https://lh3.googleusercontent.com/drive-viewer/" + queryResult + "=w8000-rw-v1";
             }
             return queryResult;
         } catch (Exception e) {
